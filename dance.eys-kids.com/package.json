@@ -1,0 +1,29 @@
+{
+  "name": "dance.eys-kids.com",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "set NODE_EXTRA_CA_CERTS=local.2nd-community.com.pem && nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "deploy-dev": "npm run deploy-dev:generate; npm run deploy-dev:sync; npm run deploy-dev:invalidate",
+    "deploy-dev:generate": "nuxt generate --dotenv .env.development",
+    "deploy-dev:sync": "aws s3 sync --delete .output/public/ s3://dance.eys-kids.com/",
+    "deploy-dev:invalidate": "AWS_PAGER= aws cloudfront create-invalidation --distribution-id E1PX2SQX8JP6G5 --paths \"/*\""
+  },
+  "dependencies": {
+    "nuxt": "^3.12.2",
+    "shared": "workspace:*",
+    "vite": "^6.0.11",
+    "vue-navigation": "^1.1.4",
+    "vue-router": "^4.4.0"
+  },
+  "devDependencies": {
+    "@vue/compiler-sfc": "^3.5.13",
+    "sass": "^1.77.6",
+    "typescript": "^5.6.3",
+    "vue-tsc": "^2.2.0"
+  }
+}
