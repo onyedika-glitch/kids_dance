@@ -1,0 +1,15 @@
+# Nuxt & Node build artifacts
+.nuxt
+.output
+node_modules
+*.log
+.env
+.env.*
+!.env.example
+dist
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode
+.idea
