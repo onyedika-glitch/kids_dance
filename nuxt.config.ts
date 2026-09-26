@@ -4,18 +4,14 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: false },
   modules: ['@nuxtjs/tailwindcss'],
+  experimental: {
+    appManifest: false
+  },
   ignore: [
     '**/.nuxt/**',
     '**/.output/**',
     '**/public/**'
   ],
-  watchers: {
-    chokidar: {
-      usePolling: true,
-      interval: 1000,
-      ignored: ['**/node_modules/**', '**/.git/**', '**/.nuxt/**', '**/.output/**', '**/public/**']
-    }
-  },
   vite: {
     server: {
       watch: {
