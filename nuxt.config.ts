@@ -1,8 +1,36 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  compatibilityDate: '2026-09-26',
   ssr: false,
   devtools: { enabled: false },
   modules: ['@nuxtjs/tailwindcss'],
+  ignore: [
+    '**/.nuxt/**',
+    '**/.output/**',
+    '**/public/**'
+  ],
+  watchers: {
+    chokidar: {
+      usePolling: true,
+      interval: 1000,
+      ignored: ['**/node_modules/**', '**/.git/**', '**/.nuxt/**', '**/.output/**', '**/public/**']
+    }
+  },
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+        interval: 1000,
+        ignored: [
+          '**/node_modules/**',
+          '**/.git/**',
+          '**/.nuxt/**',
+          '**/.output/**',
+          '**/public/**'
+        ]
+      }
+    }
+  },
   app: {
     head: {
       title: 'EYS-Kids Dance Academy | 楽しく学べるキッズダンス教室',
