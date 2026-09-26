@@ -3,80 +3,56 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
   body {
-    font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
-    background-color: #0f172a;
-    color: #f8fafc;
+    @apply bg-white font-sans text-ink antialiased;
     overflow-x: hidden;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-sky ring-offset-2;
   }
 }
 
-/* Custom Glassmorphism & Gradient Effects */
-.glass-panel {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+@layer components {
+  /* Clipped-corner white card used throughout the Figma */
+  .chamfer {
+    clip-path: polygon(var(--c, 22px) 0, calc(100% - var(--c, 22px)) 0, 100% var(--c, 22px), 100% calc(100% - var(--c, 22px)), calc(100% - var(--c, 22px)) 100%, var(--c, 22px) 100%, 0 calc(100% - var(--c, 22px)), 0 var(--c, 22px));
+  }
+  .chamfer-sm { --c: 12px; }
+  .chamfer-lg { --c: 36px; }
+
+  .hex-clip {
+    clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  }
+
+  /* Parallelogram buttons / labels */
+  .skew-box {
+    clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
+  }
+
+  /* Pastel page band from the Figma (sky → lavender) */
+  .band {
+    background-color: #a3bae3;
+    background-image: linear-gradient(90deg, theme('colors.band.sky'), theme('colors.band.lavender'));
+  }
+  /* Warm CTA band behind the free-trial card */
+  .band-warm {
+    background-color: #eeb07a;
+    background-image: linear-gradient(90deg, #ef9793, #eac865);
+  }
+
+  .section { @apply py-14 md:py-20; }
+  .container-x { @apply mx-auto w-full max-w-content px-4 sm:px-6; }
+  .container-wide { @apply mx-auto w-full max-w-wide px-4 sm:px-6; }
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(236, 72, 153, 0.4);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px -10px rgba(236, 72, 153, 0.3);
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.gradient-bg {
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #3b82f6 100%);
-}
-
-.gradient-bg-orange {
-  background: linear-gradient(135deg, #f97316 0%, #eab308 100%);
-}
-
-/* Custom Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #0f172a;
-}
-::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #ec4899;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
