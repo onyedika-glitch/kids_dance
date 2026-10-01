@@ -1,27 +1,39 @@
--- Content seed (safe for production): video cards only. No figures here —
--- enter the real member count and survey results in the dashboard.
+-- Tiny Explorers Hub content seed: the page's videos (MP4s converted by `pnpm videos`) and its YouTube uploads.
+-- Real channel figures from the Facebook page (Sep 30, 2026); update them in the dashboard as they grow.
+insert into public.site_stats (key, value, as_of) values
+  ('video_plays', 7100, '2026-09-30'),
+  ('recommend_pct', 100, '2026-09-30'),
+  ('reviews', 7, '2026-09-30')
+on conflict (key) do update set value = excluded.value, as_of = excluded.as_of, updated_at = now();
 
--- Verified official video: Yubi Fest 2020 live-streamed recital (official EYS Music School YouTube channel)
--- Custom thumbnail: YouTube's own thumbnail has Japanese text burned in
-insert into public.videos (placement, youtube_id, title, subtitle, meta, image, sort) values
-  ('workshop', 'AQXESSmW5Gw', 'Yubi Fest 2020: Live-Streamed Recital (Dec 12, 2020)', 'EYS-Kids Dance Academy', 'Kanto / Recital', '/images/events/friends.webp', 0),
-  ('activity', 'AQXESSmW5Gw', 'Yubi Fest 2020: Live-Streamed Recital (Dec 12, 2020)', 'EYS-Kids Dance Academy', 'Kanto / Recital', '/images/events/friends.webp', 0);
+insert into public.videos (slug, title, category, letter, description, try_this, media_file, facebook_id, duration, published_at, featured) values
+  ('letter-a', 'A is for Apple', 'abc', 'A', 'A is for apple, amazing and awesome! Say the short "a" sound together and spot things around you that start with A.', 'Find three things at home that start with A: an apple, an arm, maybe an ant outside!', 'letter-a.mp4', '2143808982842370', 10, '2026-08-24', true),
+  ('letter-b', 'B is for Ball, Bear and Big Smiles', 'abc', 'B', 'Bounce into the letter B with balls, bears and big smiles. Learning the alphabet has never been this bouncy.', 'Roll a ball back and forth and say "b-b-ball" each time it reaches your child.', 'letter-b.mp4', '1217639467210481', 10, '2026-08-25', false),
+  ('letter-c', 'C is for Cat, Car and Curious Minds', 'abc', 'C', 'C is for cat, car and curious minds. Hear the hard "c" sound and meet some C words.', 'Play "I spy something beginning with C" in the kitchen: cup, carrot, cooker…', 'letter-c.mp4', '921829257650931', 10, '2026-08-26', false),
+  ('letter-d', 'Learning the Letter D', 'abc', 'D', 'D is for duck and dog! Join our fun learning adventure with the letter D.', 'Draw a big D together, then turn it into a duck with a beak and a wing.', 'letter-d.mp4', '2083813452224018', 10, '2026-08-27', false),
+  ('letter-e', 'All About the Letter E', 'abc', 'E', 'Welcome to another fun alphabet adventure. Today we are learning all about the letter E.', 'Stretch your arms and legs out like the letter E. Can you hold it for three seconds?', 'letter-e.mp4', '1072067835410568', 10, '2026-08-28', false),
+  ('letter-f', 'Let''s Learn the Letter F', 'abc', 'F', 'F is for flowers! Watch your little ones discover the letter F in a garden full of colour.', 'Go on a flower walk and count the colours you see.', 'letter-f.mp4', '2419938085165704', 10, '2026-08-29', false),
+  ('letter-h', 'H is for Happy', 'abc', 'H', 'Join us as we explore the letter H. A fun, colourful way for toddlers to learn their ABCs.', 'Make a happy face, a sad face and a surprised face in the mirror. Which one is happy?', 'letter-h.mp4', '1788192989198071', 10, '2026-09-01', false),
+  ('letter-i', 'I is for Igloo', 'abc', 'I', 'I is for igloo, a cozy house made of ice blocks, and I is for ice! Brrr, let''s learn the letter I.', 'Build an "igloo" with pillows and blankets and read a story inside.', 'letter-i.mp4', '1727859791876608', 10, '2026-09-03', false),
+  ('letter-j-jump', 'J is for Jump', 'abc', 'J', 'Ready for today''s alphabet adventure? J is for jump! Get moving and learn the letter J.', 'Do ten big jumps and say "j-j-jump" every time your feet leave the floor.', 'letter-j-jump.mp4', '1730364624851244', 10, '2026-09-10', false),
+  ('letter-j-jellyfish', 'J is for Joy, Jump and Jellyfish', 'abc', 'J', 'Learning the alphabet doesn''t have to be boring! Explore the letter J through fun activities, giggles and play.', 'What''s your little one''s favourite word starting with J? Jollof counts!', 'letter-j-jellyfish.mp4', '1353515120198803', 10, '2026-09-11', false),
+  ('letter-k', 'K is for Kite', 'abc', 'K', 'Ready to soar into today''s alphabet adventure? K is for kite, and for kangaroo too!', 'Hop like a kangaroo across the room while saying the "k" sound.', 'letter-k.mp4', '1721253062420004', 10, '2026-09-05', false),
+  ('letter-l', 'Letter of the Day: L', 'abc', 'L', 'From roaring lions to lovely lemons, our little learners had so much fun exploring the letter L.', 'Letter L hunt: walk around the house and find three things that start with L, like a lamp, leaves or a lock.', 'letter-l.mp4', '1585551626391539', 10, '2026-09-07', false),
+  ('alphabet-trailer', 'Our Animated Alphabet Trailer', 'abc', null, 'Turn screen time into learning time! A sneak peek at our animated alphabet adventures.', null, 'alphabet-trailer.mp4', '1632344435117554', 10, '2026-08-22', false),
+  ('making-learning-fun', 'Making Learning Fun', 'abc', null, 'Making learning fun is the best way to help kids remember their ABCs. Here''s how we do it.', null, 'making-learning-fun.mp4', '1366402062324065', 10, '2026-08-23', false),
+  ('octopus-three-hearts', 'The Animal With Three Hearts', 'animals', null, 'Bet you didn''t know this animal has THREE hearts! Meet the ocean''s smartest magician, the octopus. Its blood is even blue!', 'If you had eight arms like an octopus, what would you do with them?', 'octopus-three-hearts.mp4', '1267535205509181', 10, '2026-09-28', false),
+  ('hidden-chameleon', 'Spot the Hidden Chameleon', 'animals', null, 'Can your child spot the hidden chameleon in under 5 seconds? Chameleons change colour to hide, to show their mood and to soak up sunlight.', 'Pause the video, zoom in and test your family''s detective skills. Who found it first?', 'hidden-chameleon.mp4', '2144776299583302', 10, '2026-09-29', false),
+  ('culture-dance', 'Children Dancing to Traditional Songs', 'songs', null, 'Seeing children dance to our traditional songs reminds us that our roots run deep and our future is bright.', 'Put on a song from your culture and dance together. Teach your child one move from when you were small.', 'culture-dance.mp4', '1087570360423146', 10, '2026-09-29', false),
+  ('children-worship', 'The Joy of Children''s Worship', 'faith', null, 'Experience the pure joy of worship through the voices of children lifting their hearts in song.', null, 'children-worship.mp4', '1726849708581767', 10, '2026-09-13', false),
+  ('bible-verse', 'A Blessing for Your Family', 'faith', null, '"Beloved, I wish above all things that thou mayest prosper and be in health." (3 John 1:2) A short blessing for your family.', null, 'bible-verse.mp4', '3291862997671588', 10, '2026-09-14', false),
+  ('happy-new-week', 'Happy New Week!', 'family', null, 'Starting the week with pure joy and bright smiles. Wishing every little explorer a wonderful week.', null, 'happy-new-week.mp4', '1060311019811440', 10, '2026-09-22', false),
+  ('open-field-magic', 'The Magic of an Open Field', 'family', null, 'Nothing beats the pure magic of childhood and an open field to run in.', 'Head outside and race to the nearest tree. Ready, steady, go!', 'open-field-magic.mp4', '1624035675947340', 10, '2026-09-18', false),
+  ('lost-favorite-toy', 'Where Is That Favourite Toy?', 'family', null, 'Ever had to turn the whole house upside down just to find that one favourite toy? We''ve all been there!', null, 'lost-favorite-toy.mp4', '1612708723555235', 10, '2026-09-16', false),
+  ('tomorrow-we-learn', 'Tomorrow, We Learn!', 'family', null, 'The excitement is already building. Our children are eagerly waiting for tomorrow''s learning session.', null, 'tomorrow-we-learn.mp4', '28109637865330487', 10, '2026-09-06', false),
+  ('sunday-smiles', 'Sweet Sunday Smiles', 'family', null, 'Sundays are made for sweet smiles, laughter and quality family moments. Take time to relax and make memories.', null, 'sunday-smiles.mp4', '3120041344854420', 10, '2026-09-27', false),
+  ('happy-sunday', 'Happy Sunday, Everyone', 'family', null, 'Wishing you a peaceful day of rest and a fantastic week ahead.', null, 'happy-sunday.mp4', '932023453294914', 10, '2026-09-20', false);
 
--- Remaining cards from the design. Add youtube_id when each video is published.
-insert into public.videos (placement, title, subtitle, meta, image, sort) values
-  ('workshop', 'Hip-Hop Workshop with Pro Dancers: Highlights', 'EYS-Kids Dance Academy', 'Kanto / Hip-Hop', '/images/events/lesson.webp', 1),
-  ('workshop', 'Rock & Pop Band Taster: First Time on Drums', 'EYS-Kids Music School', 'Kanto / Drums', null, 2),
-  ('workshop', 'Parade Dance Workshop: Mini Parade Day', 'EYS-Kids Dance Academy', 'Kanto / Theme Park', '/images/events/stage-class.webp', 3),
-  ('workshop', 'Mural Workshop: One Big Picture, Painted Together', 'EYS-Kids Art & Design', 'Kansai / Art', null, 4),
-  ('workshop', 'Kids Dance Battle: Final Highlights', 'EYS-Kids Dance Academy', 'Kanto / Battle', '/images/events/duo.webp', 5),
-  ('activity', 'Hip-Hop Workshop with Pro Dancers: Highlights', 'EYS-Kids Dance Academy', 'Kanto / Hip-Hop', '/images/events/lesson.webp', 1),
-  ('activity', 'Parade Dance Workshop: Mini Parade Day', 'EYS-Kids Dance Academy', 'Kanto / Theme Park', '/images/events/stage-class.webp', 2),
-  ('activity', 'Kids Dance Battle: Final Highlights', 'EYS-Kids Dance Academy', 'Kanto / Battle', '/images/events/duo.webp', 3);
-
-insert into public.videos (placement, title, subtitle, meta, instructor, image, sort) values
-  ('home', 'First Kids Hip-Hop | Finding the Beat, the Fun Way', 'EYS-Kids Daikanyama Studio', 'Kanto / Hip-Hop', 'MIKU', '/images/home/class-1.webp', 0),
-  ('home', 'Beginner Jazz | Turns and Graceful Expression', 'EYS-Kids Ginza Studio', 'Kanto / Jazz', 'AYA', '/images/home/class-2.webp', 1),
-  ('home', 'K-Pop Covers | Master the Hit Choreography', 'EYS-Kids Shibuya Studio', 'Kanto / K-Pop', 'YUNA', '/images/home/class-3.webp', 2),
-  ('home', 'Intro to Cheer | Smiles and Teamwork', 'EYS-Kids Shinjuku Studio', 'Kanto / Cheer', 'SAKI', '/images/home/class-4.webp', 3),
-  ('home', 'Breakin’ | Floor-Move Basics, Safely', 'EYS-Kids Ikebukuro Studio', 'Kanto / Breakin’', 'RYO', '/images/home/class-5.webp', 4),
-  ('home', 'Contemporary | Growing Free Expression', 'EYS-Kids Yokohama Studio', 'Kanto / Contemporary', 'NANA', '/images/home/class-6.webp', 5);
+insert into public.videos (slug, title, category, letter, description, youtube_id, published_at) values
+  ('yt-letter-a', 'Learn Letter A with Fun! Phonics for Toddlers & Preschoolers', 'abc', 'A', 'Our first YouTube phonics lesson: meet the letter A, hear its sound and find A words.', 'nDCFh5VZkhM', '2026-09-20'),
+  ('yt-three-hearts', 'Bet You Didn''t Know This Animal Has THREE Hearts!', 'animals', null, 'The octopus has three hearts and blue blood. Meet the ocean''s smartest magician.', 'cuZa_V89eP0', '2026-09-28'),
+  ('yt-learn-together', 'Let''s Learn Together, Little Ones!', 'family', null, 'A little hello from Tiny Explorers Hub. Stay tuned for more learning adventures!', 'NwYAU-af-S0', '2026-09-15');

@@ -1,10 +1,13 @@
 <script setup lang="ts">
-// Site-wide YouTube player opened from any video card via useVideoPlayer()
+// Site-wide video player opened from any video card via useVideoPlayer():
+// self-hosted MP4s play in <video>, YouTube videos in the privacy-enhanced embed
+import { videoSrc, videoThumb } from '~/data/videos'
+
 const { current, close } = useVideoPlayer()
 const closeBtn = ref<HTMLButtonElement | null>(null)
 let returnFocus: HTMLElement | null = null
 
-const src = computed(() => current.value?.youtubeId
+const src = computed(() => current.value?.youtubeId && !current.value.mediaFile
   ? `https://www.youtube-nocookie.com/embed/${current.value.youtubeId}?autoplay=1&rel=0&playsinline=1`
   : '')
 
@@ -40,7 +43,8 @@ onBeforeUnmount(() => document.removeEventListener('keydown', onKey))
           </button>
         </div>
         <div class="relative aspect-video w-full bg-black">
-          <iframe :src="src" :title="current.title" class="absolute inset-0 h-full w-full" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" />
+          <video v-if="current.mediaFile" :src="videoSrc(current)!" :poster="videoThumb(current)" controls autoplay playsinline class="absolute inset-0 h-full w-full" :aria-label="current.title" />
+          <iframe v-else :src="src" :title="current.title" class="absolute inset-0 h-full w-full" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" />
         </div>
       </div>
     </div>

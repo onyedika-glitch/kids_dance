@@ -6,11 +6,11 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
+    "preview": "node --env-file=.env .output/server/index.mjs",
+    "videos": "bash scripts/import-videos.sh",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "leaflet": "^1.9.4",
     "nuxt": "^3.12.2",
     "postgres": "^3.4.9",
     "vue": "^3.4.0",
@@ -18,7 +18,6 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.12.0",
-    "@types/leaflet": "^1.9.22",
     "@types/node": "^22.20.4",
     "@vue/compiler-sfc": "^3.5.13",
     "sass": "^1.77.6",

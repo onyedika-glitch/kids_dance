@@ -1,9 +1,12 @@
 export const site = {
-  name: 'EYS-Kids Dance Academy',
-  tagline: 'Growing kids\' hearts and bodies',
-  phone: '0120-978-900',
-  phoneHref: 'tel:0120978900',
-  hours: '8:00 a.m.–1:00 a.m.',
+  name: 'Tiny Explorers Hub',
+  tagline: 'Learn • Discover • Grow • Adventure',
+  motto: 'Big dreams start small!',
+  intro: 'Inspiring young minds through cheerful songs, ABCs, 123s and animated adventures.',
+  email: 'franklinomogo67@gmail.com',
+  facebook: 'https://www.facebook.com/profile.php?id=61593398853461',
+  youtube: 'https://www.youtube.com/@tinyexplorershub9',
+  youtubeSubscribe: 'https://www.youtube.com/@tinyexplorershub9?sub_confirmation=1',
 }
 
 export interface NavItem {
@@ -11,34 +14,34 @@ export interface NavItem {
   to: string
 }
 
-// Primary nav, in the order shown in Font.png
 export const primaryNav: NavItem[] = [
   { label: 'Home', to: '/' },
-  { label: 'New to Dance?', to: '/freetrial' },
-  { label: 'Plans & Pricing', to: '/pricing' },
-  { label: 'Genres & Courses', to: '/courses' },
-  { label: 'Locations', to: '/access' },
-  { label: 'Instructors', to: '/instructors' },
+  { label: 'Videos', to: '/videos' },
+  { label: 'ABC Adventure', to: '/abc' },
+  { label: 'Most Loved', to: '/ranking' },
+  { label: 'For Parents', to: '/parents' },
+  { label: 'Support Us', to: '/support' },
 ]
 
 // Collapsed under "More"
 export const moreNav: NavItem[] = [
-  { label: 'Our Vision', to: '/vision' },
-  { label: 'Curriculum', to: '/curriculum' },
-  { label: 'Events', to: '/events' },
-  { label: 'Why Families Choose Us', to: '/ranking' },
-  { label: 'Community', to: '/community' },
-  { label: 'Parent Voices', to: '/usersvoice' },
-  { label: 'Activities', to: '/activity' },
-  { label: 'Safety', to: '/safety' },
-  { label: 'News', to: '/news' },
+  { label: 'Work With Us', to: '/work-with-us' },
+  { label: 'Updates', to: '/news' },
+  { label: 'About', to: '/about' },
+  { label: 'Privacy', to: '/privacy' },
 ]
 
-// Sister services in the lilac top bar
-export const sisterBrands = [
-  { label: 'Kids Art College', note: 'EYS-Kids' },
-  { label: 'Kids STE-LAM Lab', note: 'EYS-Kids' },
-  { label: 'MY COMPASS', note: 'EYS-Kids My Compass' },
-  { label: 'Kids Olympia', note: 'Coming Soon', soon: true },
-  { label: 'Business College', note: 'Coming Soon', soon: true },
-]
+// Social links in the top bar
+export const socials = [
+  { label: 'YouTube', href: site.youtube, icon: 'youtube' },
+  { label: 'Facebook', href: site.facebook, icon: 'facebook' },
+  { label: 'Email', href: `mailto:${site.email}`, icon: 'mail' },
+] as const
+
+// The four promises printed on the channel banner
+export const pillars = [
+  { title: 'Fun Learning', text: 'Bite-sized lessons that feel like play, so little ones keep coming back.', color: '#1E88E5', icon: 'bulb' },
+  { title: 'Curious Minds', text: 'Amazing facts and gentle questions that spark "why?" and "how?"', color: '#3DAA3C', icon: 'book' },
+  { title: 'Creative Play', text: 'Songs, dance and at-home activities to learn with the whole body.', color: '#FFB800', icon: 'spark' },
+  { title: 'Big Adventures', text: 'From the ocean floor to the jungle, every video is a tiny expedition.', color: '#E53935', icon: 'globe' },
+] as const

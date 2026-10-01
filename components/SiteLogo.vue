@@ -1,20 +1,18 @@
 <script setup lang="ts">
-// "DANCE ACADEMY / EYS-Kids" wordmark with the four colored ticks, rebuilt in SVG.
-withDefaults(defineProps<{ light?: boolean }>(), { light: false })
+// Round channel logo + "Tiny Explorers Hub" lettering in the logo's colors
+withDefaults(defineProps<{ light?: boolean, size?: 'sm' | 'md' }>(), { light: false, size: 'md' })
+const tiny = [['T', '#1E88E5'], ['i', '#FFB800'], ['n', '#3DAA3C'], ['y', '#E53935']]
 </script>
 
 <template>
-  <svg viewBox="0 0 230 56" role="img" aria-label="DANCE ACADEMY EYS-Kids" class="h-auto">
-    <g stroke-width="3" stroke-linecap="square">
-      <path d="M3 2v8" stroke="#FF5860" />
-      <path d="M98 1l4 7" stroke="#FF5860" />
-      <path d="M222 1l-3 8" stroke="#8DC21F" />
-      <path d="M41 36v8" stroke="#F2C230" />
-      <path d="M186 36v8" stroke="#23AADD" />
-    </g>
-    <text x="0" y="31" :fill="light ? '#fff' : '#333'" font-family="Poppins, sans-serif" font-size="23" letter-spacing="1.5">
-      <tspan font-weight="700">DANCE</tspan><tspan font-weight="500">ACADEMY</tspan>
-    </text>
-    <text x="115" y="53" text-anchor="middle" :fill="light ? '#fff' : '#333'" font-family="Poppins, sans-serif" font-size="12" font-weight="500" letter-spacing="2">EYS-Kids</text>
-  </svg>
+  <span class="inline-flex items-center gap-2.5" role="img" aria-label="Tiny Explorers Hub">
+    <img src="/images/logo-96.webp" alt="" width="56" height="56" :class="size === 'sm' ? 'h-11 w-11' : 'h-12 w-12 lg:h-14 lg:w-14'">
+    <span aria-hidden="true" class="flex flex-col font-display font-bold leading-none" :class="size === 'sm' ? 'text-lg' : 'text-xl lg:text-2xl'">
+      <span class="flex items-baseline gap-[0.18em]">
+        <span><span v-for="([ch, c], i) in tiny" :key="i" :style="{ color: c }">{{ ch }}</span></span>
+        <span :class="light ? 'text-white' : 'text-ink'">Explorers</span>
+      </span>
+      <span class="mt-[0.2em] self-start rounded-full bg-brand-orange px-[0.5em] py-[0.08em] text-[0.6em] text-white">Hub</span>
+    </span>
+  </span>
 </template>

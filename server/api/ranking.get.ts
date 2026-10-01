@@ -1,50 +1,23 @@
-import { rankingIntro, relativeTime, surveyLead, type RankingReason } from '../../data/ranking'
-import type { SocialPlatform } from '../../data/voices'
+import type { VideoItem } from '../../data/videos'
 
-// GET /api/ranking — latest published survey, ranked by votes.
-// Returns an empty list (the page shows its "being compiled" state) until real results are entered.
-export default defineCachedEventHandler(async () => {
-  const empty = { intro: { title: rankingIntro.title, lead: '' }, reasons: [] as RankingReason[] }
+// GET /api/ranking — the most-loved videos, by likes (ties: newest first)
+export default defineCachedEventHandler(async (): Promise<{ videos: (VideoItem & { rank: number })[], totalLikes: number }> => {
   const sql = useDb()
-  if (!sql) return empty
+  if (!sql) return { videos: [], totalLikes: 0 }
   try {
-    const [survey] = await sql<{ id: string, title: string, fiscal_year: string | null, respondents: number | null }[]>`
-      select id, title, fiscal_year, respondents from surveys
-      where published order by created_at desc limit 1`
-    if (!survey) return empty
-
-    const rows = await sql<{ id: string, title: string, votes: number }[]>`
-      select id, title, votes from ranking_reasons
-      where survey_id = ${survey.id} and published
-      order by votes desc, title`
-    const voices = rows.length
-      ? await sql<{ id: string, reason_id: string, platform: SocialPlatform, name: string, profile: string | null, body: string, posted_at: Date }[]>`
-          select id, reason_id, platform, name, profile, body, posted_at from ranking_voices
-          where published and reason_id in ${sql(rows.map(r => r.id))}
-          order by posted_at desc`
-      : []
-
-    const now = Date.now()
+    const all = (await selectVideos(sql)).map(toVideo)
+    const sorted = all.filter(v => v.likes > 0).sort((a, b) => b.likes - a.likes || b.publishedAt.localeCompare(a.publishedAt)).slice(0, 10)
     let rank = 0
-    let prevVotes = -1
-    const reasons: RankingReason[] = rows.map((r, i) => {
-      // Ties share a rank (1, 2, 2, 4…)
-      if (r.votes !== prevVotes) rank = i + 1
-      prevVotes = r.votes
-      return {
-        id: r.id,
-        rank,
-        title: r.title,
-        count: r.votes,
-        voices: voices.filter(v => v.reason_id === r.id).map(v => ({
-          id: v.id, platform: v.platform, name: v.name, profile: v.profile ?? '', time: relativeTime(v.posted_at.toISOString(), now), text: v.body,
-        })),
-      }
+    let prev = -1
+    const videos = sorted.map((v, i) => {
+      if (v.likes !== prev) rank = i + 1
+      prev = v.likes
+      return { ...v, rank }
     })
-    return { intro: { title: rankingIntro.title, lead: surveyLead(survey) }, reasons }
+    return { videos, totalLikes: all.reduce((n, v) => n + v.likes, 0) }
   }
   catch (e) {
     console.error('[ranking]', e)
-    return empty
+    return { videos: [], totalLikes: 0 }
   }
-}, { name: 'ranking', maxAge: 60, swr: true })
+}, { name: 'ranking', maxAge: 30, swr: true })

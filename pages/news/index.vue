@@ -3,8 +3,8 @@ import { newsCategories } from '~/data/news'
 import type { NewsCategory, NewsSummary } from '~/data/news'
 
 useSeoMeta({
-  title: 'News',
-  description: 'The latest from EYS-Kids Dance Academy: new studio openings, recitals and events, campaigns, and columns from our staff.',
+  title: 'Updates',
+  description: 'News from Tiny Explorers Hub: new video series, milestones and announcements from our little learning channel.',
 })
 
 const PAGE = 9
@@ -30,23 +30,23 @@ watch(() => route.query.category, (v) => {
   if (next !== category.value) select(next)
 })
 
-const tabs = [{ id: '' as const, color: '#333333', label: 'All' }, ...newsCategories.map(c => ({ ...c, label: c.id }))]
+const tabs = [{ id: '' as const, color: '#0B1F4F', label: 'All' }, ...newsCategories.map(c => ({ ...c, label: c.id }))]
 </script>
 
 <template>
   <div>
-    <PageHero en="NEWS" title="News" image="/images/news/hero.webp" alt="Kids smiling and having fun dancing" :crumbs="[{ label: 'News' }]" />
+    <PageHero en="Updates" title="News from Tiny Explorers Hub" image="/images/posters/happy-new-week.webp" alt="Three happy children running across a sunny park" :crumbs="[{ label: 'Updates' }]" />
 
-    <section class="section bg-paper" aria-label="Articles">
+    <section class="section bg-paper-light" aria-label="Updates">
       <div class="container-x">
         <div class="-mx-4 overflow-x-auto px-4 [scrollbar-width:none] sm:mx-0 sm:px-0 [&::-webkit-scrollbar]:hidden">
           <ul class="flex w-max gap-2 sm:w-auto sm:flex-wrap sm:justify-center" aria-label="Filter by category">
             <li v-for="t in tabs" :key="t.id">
               <button
                 type="button"
-                class="skew-box h-10 min-w-[96px] px-5 text-sm transition-colors"
-                :class="category === t.id ? 'text-white' : 'bg-white text-ink hover:bg-lilac'"
-                :style="category === t.id ? { backgroundColor: t.color } : {}"
+                class="h-11 min-w-[96px] rounded-full border-2 px-5 text-sm font-bold transition-colors"
+                :class="category === t.id ? 'text-white' : 'bg-white text-ink hover:bg-paper'"
+                :style="category === t.id ? { backgroundColor: t.color, borderColor: t.color } : { borderColor: `${t.color}40` }"
                 :aria-pressed="category === t.id"
                 @click="select(t.id)"
               >
@@ -56,23 +56,21 @@ const tabs = [{ id: '' as const, color: '#333333', label: 'All' }, ...newsCatego
           </ul>
         </div>
 
-        <p class="mt-6 text-center text-xs text-ink-mute" aria-live="polite">{{ data?.total ?? 0 }} {{ data?.total === 1 ? 'article' : 'articles' }}</p>
+        <p class="mt-6 text-center text-sm font-semibold text-ink-mute" aria-live="polite">{{ data?.total ?? 0 }} {{ data?.total === 1 ? 'update' : 'updates' }}</p>
 
-        <ul v-if="items.length" class="mt-6 grid gap-6 sm:grid-cols-2 md:grid-cols-3" :class="{ 'opacity-60': status === 'pending' }">
+        <ul v-if="items.length" class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" :class="{ 'opacity-60': status === 'pending' }">
           <li v-for="n in items" :key="n.id">
             <NewsCard :item="n" show-tag />
           </li>
         </ul>
-        <p v-else class="mt-10 text-center text-sm text-ink-soft">No articles here yet.</p>
+        <p v-else class="mt-10 text-center text-base text-ink-soft">No updates here yet.</p>
 
         <div v-if="remaining > 0" class="mt-10 text-center">
-          <button type="button" class="skew-box inline-flex h-12 min-w-[240px] items-center justify-center gap-3 bg-brand-sky px-10 text-sm font-medium text-white transition-colors hover:bg-[#1c98c8]" @click="visible += PAGE">
-            Load More<span class="text-xs opacity-80">({{ remaining }} more)</span><Icon name="chevron-down" class="h-4 w-4" />
-          </button>
+          <SkewButton color="sky" size="lg" class="min-w-[240px]" @click="visible += PAGE">Load more ({{ remaining }})</SkewButton>
         </div>
       </div>
     </section>
 
-    <FreeTrialCta />
+    <JoinCta />
   </div>
 </template>

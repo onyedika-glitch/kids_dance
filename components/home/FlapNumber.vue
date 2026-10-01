@@ -11,8 +11,12 @@ const el = ref<HTMLElement | null>(null)
 const current = ref(props.value)
 // Keep the digit count fixed (odometer style) so the boxes don't jump while counting
 const chars = computed(() => {
-  const digits = String(current.value).padStart(String(props.value).length, '0')
-  return [...digits.replace(/\B(?=(\d{3})+(?!\d))/g, ',')]
+  const len = String(props.value).length
+  const digits = String(current.value).padStart(len, '0').replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  // Leading zeros (and their commas) show as blank flaps
+  const lead = Math.max(0, len - String(current.value).length)
+  let seen = 0
+  return [...digits].map(c => ({ c, blank: c === ',' ? seen < lead : seen++ < lead }))
 })
 
 let io: IntersectionObserver | undefined
@@ -41,10 +45,10 @@ onBeforeUnmount(() => {
 
 <template>
   <span ref="el" class="inline-flex items-end gap-[2px] rounded-sm bg-white p-[3px] align-middle shadow-[0_1px_4px_rgba(0,0,0,0.18)]" :aria-label="value.toLocaleString('en-US')" role="img">
-    <template v-for="(c, i) in chars" :key="i">
-      <span v-if="c === ','" class="w-2 text-center font-display text-[1.4em] leading-none" :style="{ color }" aria-hidden="true">,</span>
+    <template v-for="({ c, blank }, i) in chars" :key="i">
+      <span v-if="c === ','" class="w-2 text-center font-display text-[1.4em] leading-none" :class="{ 'opacity-0': blank }" :style="{ color }" aria-hidden="true">,</span>
       <span v-else class="relative inline-flex h-[1.6em] w-[1.05em] items-center justify-center border border-[#E4E4E4] bg-white font-display text-[1.4em] font-medium leading-none tabular-nums" :style="{ color }" aria-hidden="true">
-        {{ c }}
+        <span :class="{ 'opacity-0': blank }">{{ c }}</span>
         <span class="absolute inset-x-0 top-1/2 h-px bg-[#EDEDED]" />
       </span>
     </template>

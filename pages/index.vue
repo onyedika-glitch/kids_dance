@@ -1,39 +1,37 @@
 <script setup lang="ts">
 import type { NewsSummary } from '~/data/news'
+import type { Category, VideoItem } from '~/data/videos'
+import type { ChannelStats } from '~/server/api/stats.get'
 
 useSeoMeta({
-  title: '',
-  description: 'EYS-Kids Dance Academy is a kids\' dance school for ages 3 through upper elementary. With 68,434 members and easy-to-reach studios near stations nationwide, our STE-LAM education and Karte progress reports help grow kids\' hearts and bodies. Book a free trial lesson today.',
+  title: 'Tiny Explorers Hub | Learn, Discover, Grow, Adventure',
+  description: 'Short, cheerful learning videos for toddlers and preschoolers: ABCs and phonics, amazing animal facts, songs, faith and family fun. Big dreams start small!',
 })
 
-type NewsList = { total: number, items: NewsSummary[] }
-const [{ data: topics }, { data: columns }] = await Promise.all([
-  useFetch<NewsList>('/api/news', { query: { exclude: 'Column', limit: 6 }, key: 'home-topics' }),
-  useFetch<NewsList>('/api/news', { query: { category: 'Column', limit: 6 }, key: 'home-columns' }),
+const [{ data: lib }, { data: stats }, { data: ranking }, { data: updates }] = await Promise.all([
+  useFetch<{ videos: VideoItem[], categories: Category[], total: number }>('/api/videos', { key: 'home-videos' }),
+  useFetch<ChannelStats>('/api/stats', { key: 'stats' }),
+  useFetch<{ videos: (VideoItem & { rank: number })[], totalLikes: number }>('/api/ranking', { key: 'home-ranking' }),
+  useFetch<{ total: number, items: NewsSummary[] }>('/api/news', { query: { limit: 3 }, key: 'home-news' }),
 ])
+
+const videos = computed(() => lib.value?.videos ?? [])
+const featured = computed(() => videos.value.find(v => v.featured) ?? videos.value.find(v => v.mediaFile) ?? null)
+const latest = computed(() => videos.value.slice(0, 6))
+const loved = computed(() => ranking.value?.videos.slice(0, 3) ?? [])
 </script>
 
 <template>
   <div>
-    <!-- Panel -->
-    <section class="relative bg-paper" aria-labelledby="hero-title">
-      <h1 id="hero-title" class="sr-only">EYS-Kids Dance Academy — Growing kids' hearts and bodies</h1>
-      <picture>
-        <source media="(max-width: 767px)" srcset="/images/home/hero-sm.webp" width="960" height="400" />
-        <img src="/images/home/hero.webp" alt="Three girls jumping and dancing with the words &quot;Let's Dance!&quot;" width="1920" height="801" fetchpriority="high" decoding="async" class="aspect-[1920/801] w-full object-cover" />
-      </picture>
-      <p class="absolute left-[52.8%] top-[85.9%] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] font-medium text-white [text-shadow:0_1px_3px_rgba(0,0,0,.35)] sm:text-sm lg:text-lg xl:text-xl" aria-hidden="true">— Growing kids' hearts and bodies · EYS-Kids Dance Academy —</p>
-    </section>
-
-    <HomeWhy />
-    <FreeTrialCta />
+    <HomeHero :video="featured" />
+    <HomeStats :stats="stats ?? null" />
     <HomeAbout />
-    <HomeLesson />
-    <HomeKarte />
-    <HomeNews v-if="topics?.items.length" :items="topics.items" />
-    <HomeColumns v-if="columns?.items.length" :items="columns.items" />
-    <HomeClasses />
-    <FreeTrialCta />
-    <CampaignBanner />
+    <HomeLatest v-if="latest.length" :videos="latest" :total="lib?.total ?? latest.length" />
+    <HomeAbc :videos="videos" />
+    <HomeCategories v-if="lib" :categories="lib.categories" :videos="videos" />
+    <HomeLoved :videos="loved" />
+    <HomeEarn />
+    <HomeNews v-if="updates?.items.length" :items="updates.items" />
+    <JoinCta />
   </div>
 </template>

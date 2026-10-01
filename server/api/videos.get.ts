@@ -1,32 +1,20 @@
-import { fallbackVideos, isYoutubeId, type VideoItem, type VideoPlacement } from '../../data/videos'
+import { categories, fallbackVideos, type CategoryId, type VideoItem } from '../../data/videos'
 
-const placements: VideoPlacement[] = ['home', 'workshop', 'activity']
-
-// GET /api/videos?placement=home|workshop|activity — published cards in `sort` order
-export default defineCachedEventHandler(async (event): Promise<VideoItem[]> => {
-  const q = getQuery(event).placement
-  const placement = placements.find(p => p === q)
-  if (!placement) throw createError({ statusCode: 400, statusMessage: 'Unknown placement' })
-
+// GET /api/videos?category=abc&limit=6 — published videos (with like counts), newest first
+export default defineEventHandler(async (event): Promise<{ videos: VideoItem[], categories: typeof categories, total: number }> => {
+  const q = getQuery(event)
+  const cat = categories.find(c => c.id === q.category)?.id as CategoryId | undefined
+  const limit = Math.min(200, Math.max(1, Number(q.limit) || 200))
   const sql = useDb()
-  if (!sql) return fallbackVideos[placement]
-  try {
-    const rows = await sql<{ id: string, youtube_id: string | null, title: string, subtitle: string | null, meta: string | null, instructor: string | null, image: string | null }[]>`
-      select id, youtube_id, title, subtitle, meta, instructor, image from videos
-      where placement = ${placement} and published
-      order by sort, created_at`
-    return rows.map(v => ({
-      id: v.id,
-      youtubeId: isYoutubeId(v.youtube_id) ? v.youtube_id : null,
-      title: v.title,
-      subtitle: v.subtitle ?? '',
-      meta: v.meta ?? '',
-      instructor: v.instructor,
-      image: v.image,
-    }))
+  let all: VideoItem[] = fallbackVideos
+  if (sql) {
+    try {
+      all = (await selectVideos(sql)).map(toVideo)
+    }
+    catch (e) {
+      console.error('[videos]', e)
+    }
   }
-  catch (e) {
-    console.error('[videos]', e)
-    return fallbackVideos[placement]
-  }
-}, { name: 'videos', maxAge: 60, swr: true, getKey: event => String(getQuery(event).placement ?? '') })
+  const list = all.filter(v => !cat || v.category === cat).slice(0, limit)
+  return { videos: list, categories, total: all.length }
+})

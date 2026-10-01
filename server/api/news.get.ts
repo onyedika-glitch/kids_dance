@@ -1,7 +1,7 @@
 import { news, newsCategories, summarize } from '../../data/news'
 import type { NewsCategory } from '../../data/news'
 
-// GET /api/news?category=Column&exclude=Column&limit=9&offset=0
+// GET /api/news?category=Milestone&exclude=Announcement&limit=9&offset=0
 export default defineEventHandler((event) => {
   const q = getQuery(event)
   const category = typeof q.category === 'string' ? q.category : ''

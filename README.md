@@ -1,62 +1,73 @@
-# EYS-Kids Dance Academy
+# Tiny Explorers Hub
 
-Nuxt 3 (SSR) + Tailwind CSS site built from the Figma screenshots in `dance.eys-kids.com/static/`.
+Website for the Tiny Explorers Hub Facebook page and YouTube channel: short, cheerful learning videos for toddlers
+and preschoolers. Nuxt 3 (SSR) + Tailwind, with a Supabase (Postgres) backend.
 
-## Setup
+This project started life as the EYS-Kids Dance Academy site and was repurposed in place: same component system,
+data → `server/api` → `useFetch` structure, email pipeline and database, with the studio-only pages removed.
+The previous version is archived in `../kids_dance-eys-backup-2026-10-01.tar.gz`.
+
+## Run it locally
 
 ```bash
 pnpm install
+cp .env.example .env        # then fill it in
+pnpm build
+PORT=3100 pnpm preview      # http://localhost:3100
 ```
 
-## Development
+Live reload while editing: `pnpm dev --port 3100`. If that fails with `ENOSPC: System limit for number of file
+watchers reached`, run `sudo sysctl fs.inotify.max_user_watches=524288` once.
 
-```bash
-pnpm run dev
-```
+## Pages
 
-If the dev server fails with `ENOSPC: System limit for number of file watchers reached`, raise the inotify limit
-(`sudo sysctl fs.inotify.max_user_watches=524288`) or use `scripts/snap.sh` below.
+| Route | What it is |
+| --- | --- |
+| `/` | Home: hero, channel figures, pillars, latest videos, ABC teaser, categories, most loved, updates |
+| `/videos`, `/videos/[slug]` | Video library (filters, search) and a page per video (player, likes, share, try-this) |
+| `/abc` | ABC Adventure: A–Z grid, one video per letter |
+| `/ranking` | Most Loved: videos ranked by likes |
+| `/news`, `/news/[id]` | Updates |
+| `/support`, `/support/thanks` | Support Us: one-off gifts via Paystack + sponsorship packages |
+| `/work-with-us` | Pitch for brands and schools + inquiry form |
+| `/parents`, `/about`, `/privacy` | Parents' guide, about + contact, privacy policy |
 
-## Production
-
-The site uses server API routes (`server/api/*`, including the free-trial booking `POST /api/trial`), so deploy it as a Node server:
-
-```bash
-pnpm run build
-node --env-file=.env .output/server/index.mjs   # PORT=3000 by default
-```
-
-Copy `.env.example` to `.env` and fill in the database and Resend settings (on a host, set them as environment variables instead).
+Old dance-site URLs (`/courses`, `/pricing`, `/studios/...` …) redirect to their new equivalents (`nuxt.config.ts` → `routeRules`).
 
 ## Backend (Supabase)
 
-Schema: `supabase/migrations/20260926000000_init.sql` (already applied to the project). Content seed: `supabase/seed.sql` (video cards).
-`supabase/seed.sample.sql` holds the Figma placeholder figures — for a staging database only, never production.
+Schema: `supabase/migrations/` (both files, in order). Content: `supabase/seed.sql`. Both are applied to the project.
 
-Edit these tables in the Supabase Table Editor; the site picks changes up within a minute:
-
-| Table | Shows up as |
+| Table | Used for |
 | --- | --- |
-| `site_stats` (key `members_total`, `value`, `as_of`) | "Over N kids learn with us nationwide" counter on the home page |
-| `member_history` (`year`, `members`) | Member growth bar chart on the home page |
-| `surveys` (set `published = true`), `ranking_reasons`, `ranking_voices` | /ranking — ranks are computed from `votes`; `respondents` fills the "N responses" note |
-| `videos` (`placement` = home / workshop / activity, `youtube_id`, `sort`) | Video carousels; cards with a `youtube_id` play in a popup |
-| `trial_bookings` | Every free-trial booking (`status` for follow-up) |
+| `videos` | The video library. A row plays a self-hosted MP4 (`media_file`) or a YouTube video (`youtube_id`). |
+| `video_likes` | One like per browser per video (anonymous hashed id) → Most Loved ranking |
+| `site_stats` | Home-page figures: `video_plays`, `recommend_pct`, `reviews`. A missing row is simply not shown. |
+| `inquiries` | Messages from the Work With Us / About forms (also emailed to `NUXT_NOTIFY_EMAIL`) |
+| `donations` | Paystack support payments; status is only ever set from Paystack's verified response |
 
-A figure with no row is simply not shown — the site never falls back to made-up numbers.
+## Adding a new video
 
-Bookings are saved to `trial_bookings` and emailed to `NUXT_NOTIFY_EMAIL` via Resend (the parent also gets a confirmation once the sending domain is verified). If neither the database nor email is reachable the API returns 503 and the form points the parent to the phone number.
+1. Download it from Facebook into `../tiny-explorers-assets/facebook-videos/` (the filename starts with the Facebook video id).
+2. Add a line to `scripts/videos.tsv`: `<facebook id>` TAB `<slug>` TAB `<second for the thumbnail>`.
+3. Run `pnpm videos`: it converts the clip to H.264 MP4 (Facebook downloads are AV1/VP9, which many phones can't play) and makes thumbnails.
+4. Add the row in Supabase → `videos`: `slug`, `title`, `category`, `letter` (for ABC videos), `description`, `try_this`,
+   `media_file` = `<slug>.mp4`, `facebook_id`, `duration`, `published_at`.
+5. `pnpm build` and restart (the new MP4/thumbnail files ship with the build).
 
-Studio maps are live Leaflet maps on a label-free basemap (keyless tile services label Japan in Japanese, so English names come from the markers; set `NUXT_PUBLIC_MAP_TILE_URL` to a keyed provider for English street labels). Each studio's `lat`/`lng` in `data/studios.ts` was geocoded from its address.
+A YouTube-only video needs just a `videos` row with `youtube_id` (no files).
 
-## Structure
+## Money
 
-- `data/*.ts` — page copy (courses, studios, instructors, events, news, campaign…). Figures, videos and bookings live in Supabase (see above).
-- `server/api/*` — JSON endpoints; pages load them with `useFetch`. `server/utils/db.ts` is the Postgres connection.
-- `components/` — shared UI (`AppHeader`, `AppFooter`, `PageHero`, `ChamferCard`, `HexFrame`, `SkewButton`, `DisplayTitle`, `FreeTrialCta`, `CampaignBanner`) and per-page folders (`home/`, `courses/`, `studio/`, `people/`, `event/`…).
-- `data/campaign.ts` — campaign copy and deadline; the banner counts down and hides itself after the deadline.
-- `public/images/` — WebP photos cropped from the Figma screenshots. Replace with original high-resolution photos before launch.
+- **Paystack:** set `NUXT_PAYSTACK_SECRET_KEY` (test key first) and add the webhook URL `https://<domain>/api/paystack/webhook`
+  in the Paystack dashboard. Without a key the Support page shows "Online giving is coming soon".
+- **Sponsorship packages** and their starting prices live in `data/support.ts` (placeholders: agree the real prices with the page owner).
+- **Inquiries** arrive by email and in the `inquiries` table.
 
-## Screenshots
+## Notes
 
-`scripts/snap.sh <name> <port> <outdir> /route ...` builds into `.kd-<name>/`, serves it, and captures 1440px and 390px screenshots with headless Chrome.
+- Videos are served from `/v/<file>.mp4` by `server/routes/v/[file].get.ts`, which supports HTTP range requests (iPhone/iPad
+  Safari won't play video without them). Run the server from the project root, or set `MEDIA_DIR`.
+- Nothing is collected from children. Forms are adults-only; likes use an anonymous random cookie stored only as a hash.
+- `scripts/snap.sh <name> <port> <outdir> /route …` builds into `.kd-<name>/` and screenshots routes at 1440px and 390px.
+- `dance.eys-kids.com/` holds the original EYS Figma screenshots (reference only, not used by the site).

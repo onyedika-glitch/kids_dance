@@ -1,10 +1,19 @@
 <script setup lang="ts">
-// Inline SVG icon set, drawn to match the thin line icons in the Figma.
+// Inline SVG icon set (rounded line icons)
 defineProps<{ name: keyof typeof paths }>()
 </script>
 
 <script lang="ts">
 const paths = {
+  bulb: { fill: false, d: 'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.9V16h5v-.2c0-.8.4-1.5 1-1.9A6 6 0 0 0 12 3Z' },
+  book: { fill: false, d: 'M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15ZM4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5' },
+  spark: { fill: false, d: 'M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M18.4 5.6l-2.8 2.8M8.4 15.6l-2.8 2.8' },
+  globe: { fill: false, d: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm-9-9h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z' },
+  share: { fill: false, d: 'M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13' },
+  link: { fill: false, d: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1' },
+  whatsapp: { fill: false, d: 'M4 20l1.3-4A8 8 0 1 1 8 18.7L4 20Zm5-11c0 3.3 2.7 6 6 6l1.2-1.4-2-1-1 .8a4 4 0 0 1-2.6-2.6l.8-1-1-2L9 9Z' },
+  home: { fill: false, d: 'M3 11l9-8 9 8M5 9.5V21h14V9.5' },
+  sparkle: { fill: true, d: 'M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7L12 2Z' },
   chevron: { fill: false, d: 'M9 5l7 7-7 7' },
   'chevron-left': { fill: false, d: 'M15 5l-7 7 7 7' },
   'chevron-down': { fill: false, d: 'M5 9l7 7 7-7' },

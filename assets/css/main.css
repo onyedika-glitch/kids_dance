@@ -8,9 +8,10 @@
     -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-white font-sans text-ink antialiased;
+    @apply bg-paper-light font-sans text-ink antialiased;
     overflow-x: hidden;
   }
+  h1, h2, h3 { @apply font-display; }
   :focus-visible {
     @apply outline-none ring-2 ring-brand-sky ring-offset-2;
   }
@@ -33,16 +34,9 @@
     clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%);
   }
 
-  /* Pastel page band from the Figma (sky → lavender) */
-  .band {
-    background-color: #a3bae3;
-    background-image: linear-gradient(90deg, theme('colors.band.sky'), theme('colors.band.lavender'));
-  }
-  /* Warm CTA band behind the free-trial card */
-  .band-warm {
-    background-color: #eeb07a;
-    background-image: linear-gradient(90deg, #ef9793, #eac865);
-  }
+  /* Section bands: flat brand colors (no decorative gradients) */
+  .band { background-color: theme('colors.band.sky'); }
+  .band-warm { background-color: theme('colors.brand.yellow'); }
 
   .section { @apply py-14 md:py-20; }
   .container-x { @apply mx-auto w-full max-w-content px-4 sm:px-6; }

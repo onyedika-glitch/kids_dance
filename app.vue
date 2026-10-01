@@ -1,6 +1,6 @@
 <script setup lang="ts">
 useHead({
-  titleTemplate: (title?: string) => title && !title.startsWith('EYS-Kids Dance Academy') ? `${title} | EYS-Kids Dance Academy` : 'EYS-Kids Dance Academy | Growing kids\' hearts and bodies',
+  titleTemplate: (title?: string) => title && !title.startsWith('Tiny Explorers Hub') ? `${title} | Tiny Explorers Hub` : 'Tiny Explorers Hub | Learn, Discover, Grow, Adventure',
 })
 </script>
 

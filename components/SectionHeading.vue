@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// Display title + Japanese lead + small note, centered — the header pattern of
-// ABOUT / VISION / KARTE / ACCESS in the Figma.
+// Display title + lead + small note, centered: the header pattern of the
+// VIDEOS / ABC / ABOUT sections.
 withDefaults(defineProps<{
   en?: string
   title?: string

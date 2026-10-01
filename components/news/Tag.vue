@@ -6,5 +6,5 @@ defineProps<{ category: NewsCategory }>()
 </script>
 
 <template>
-  <span class="inline-block px-3 py-1 text-[11px] leading-none text-white" :style="{ backgroundColor: categoryColor(category) }">{{ category }}</span>
+  <span class="inline-block rounded-full px-3 py-1 text-xs font-bold leading-none text-white" :style="{ backgroundColor: categoryColor(category) }">{{ category }}</span>
 </template>

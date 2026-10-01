@@ -16,7 +16,7 @@ withDefaults(defineProps<{
       <img v-if="image" :src="image" :alt="alt" class="h-full w-full object-cover" fetchpriority="high" decoding="async" />
       <nav v-if="crumbs?.length" aria-label="Breadcrumb" class="absolute left-1/2 top-3 hidden -translate-x-1/2 md:block">
         <ol class="flex items-center gap-4 bg-ink/80 px-4 py-1 text-[10px] text-white">
-          <li><NuxtLink to="/" class="hover:underline">EYS-Kids Dance Academy</NuxtLink></li>
+          <li><NuxtLink to="/" class="hover:underline">Tiny Explorers Hub</NuxtLink></li>
           <li v-for="c in crumbs" :key="c.label" class="flex items-center gap-2">
             <Icon name="chevron" class="h-2.5 w-2.5" />
             <NuxtLink v-if="c.to" :to="c.to" class="hover:underline">{{ c.label }}</NuxtLink>

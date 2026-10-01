@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Parallelogram call-to-action with trailing chevron ("Free Trial Lesson >", "VIEW MORE >").
+// Parallelogram call-to-action with trailing chevron ("Subscribe >", "Watch videos >")
 const props = withDefaults(defineProps<{
   to?: string
   href?: string
@@ -32,7 +32,7 @@ const cls = computed(() => [
   <NuxtLink v-if="to" :to="to" :class="cls">
     <slot /><Icon name="chevron" class="h-3.5 w-3.5 shrink-0" />
   </NuxtLink>
-  <a v-else-if="href" :href="href" :class="cls">
+  <a v-else-if="href" :href="href" :target="/^https?:/.test(href) ? '_blank' : undefined" :rel="/^https?:/.test(href) ? 'noopener' : undefined" :class="cls">
     <slot /><Icon name="chevron" class="h-3.5 w-3.5 shrink-0" />
   </a>
   <button v-else :type="type" :disabled="disabled" :class="cls">
